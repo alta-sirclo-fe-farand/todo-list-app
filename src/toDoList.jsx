@@ -1,60 +1,117 @@
 import React from 'react';
+import axios from 'axios';
+import './toDoList.css';
 
 export default class toDoList extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      title: "Welcome to your to-do-list app",
+      title: "MyToDo",
       task: [],
       addedTask: "",
     };
   }
+
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  async fetchData() {
+    const config = {
+      headers: {
+        Authorization: `Bearer 7c6d3833897c6fad479421ad81c095dd1c355b88`
+      },
+    };
+    axios
+      .get("https://api.todoist.com/rest/v1/tasks", config)
+      .then((res) => {
+        const { data } = res;
+        this.setState({ task: data });
+        console.log( this.state.task );
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
   
   handleAdd() {
-    const temp = {
-      id: Math.random()*1000,
-      todo: this.state.addedTask,
-      status: "Not Completed"
+    const config = {
+      headers: {
+        Authorization: `Bearer 7c6d3833897c6fad479421ad81c095dd1c355b88`
+      },
     };
-    this.state.task.push(temp);
-    this.setState( this.state.task );
-    this.setState( this.state.addedTask= "" );
+    axios
+      .post("https://api.todoist.com/rest/v1/tasks", { "content": this.state.addedTask }, config)
+      .then(() => {
+        // const { data } = res;
+        this.fetchData();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    this.setState({ addedTask: "" });
   }
 
   handleComplete(item) {
-    const temp = this.state.task.filter((x) => x.id == item.id);
+    const config = {
+      headers: {
+        Authorization: `Bearer 7c6d3833897c6fad479421ad81c095dd1c355b88`
+      },
+    };
+    axios
+      .post(`https://api.todoist.com/rest/v1/tasks/${item.id}`, { "content": this.state.addedTask }, config)
+      .then(() => {
+        // const { data } = res;
+        this.fetchData();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      this.setState({ addedTask: "" });
   }
 
   handleDelete(item) {
-    const temp = this.state.task.filter((x) => x.id !== item.id);
-    this.setState({ task: temp });
+    const config = {
+      headers: {
+        Authorization: `Bearer 7c6d3833897c6fad479421ad81c095dd1c355b88`
+      },
+    };
+    axios
+      .delete(`https://api.todoist.com/rest/v1/tasks/${item.id}`, config)
+      .then(() => {
+        // const { data } = res;
+        this.fetchData();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   }
 
   render () {
     return (
-      <div>
-        <div>{this.state.title}</div>
-        <div>
-          <input 
-            type="text"
-            placeholder="your task here .."
-            value={this.state.addedTask}
-            onChange={(e) => this.setState({ addedTask: e.target.value })}
-          />
+      <div className='page-grid-container'>
+        <div className='title-container title-styling'>
+          {this.state.title}
         </div>
-        <div>
-          <button
-            type="submit" 
-            onClick={() => this.handleAdd()}>Add
-          </button>
+        <div className='input-container'>
+            <input 
+              type="text"
+              placeholder="Your task here .."
+              value={this.state.addedTask}
+              onChange={(e) => this.setState({ addedTask: e.target.value })}
+            />
+            <button
+              type="submit" 
+              onClick={() => this.handleAdd()}>Add
+            </button>
         </div>
-        <div>
+        <div className='task-container'>
           {this.state.task.map((item) => (
             <div key={item.id}>
-              <div>{item.todo}</div>
-              <div>{item.status}</div>
+              <div>{item.content}</div>
               <div>
-                <button>Mark as Completed
+                <button
+                  onClick={() => this.handleComplete(item)}>Edit
                 </button>
               </div>
               <div>
