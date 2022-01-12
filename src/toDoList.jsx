@@ -12,7 +12,6 @@ class toDoList extends React.Component {
       task: [],
       addedTask: "",
       isReady: false,
-      search: ""
     };
   }
 
