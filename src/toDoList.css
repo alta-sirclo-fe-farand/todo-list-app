@@ -1,3 +1,5 @@
+/*general*/
+
 *,
 *::before,
 *::after {
@@ -10,6 +12,8 @@ body {
     background-color: darkgrey;
 }
 
+/*layout*/
+
 .title-container {
     display: flex;
     justify-content: center;
@@ -19,12 +23,26 @@ body {
 }
 
 .input-container {
-    display: flex;
-    justify-content: center;
-    padding-top: 1vh;
-    padding-bottom: 3vh;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    padding-top: 15px;
 }
 
+.input-bar {
+    grid-row: 1 / span 1;
+    grid-column: 2 / span 2;
+}
+
+.add-button {
+    grid-row: 2 / span 1;
+    grid-column: 2 / span 1;
+}
+
+.search-button {
+    grid-row: 2 / span 1;
+    grid-column: 3 / span 1;
+}
 
 .task-container {
     display: flex;
@@ -32,6 +50,23 @@ body {
     margin: 3vh;
 }
 
+.button-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+.reset-button {
+    grid-row: 1 / span 1;
+    grid-column: 2 / span 2;
+}
+
+.contact-button {
+    grid-row: 2 / span 1;
+    grid-column: 2 / span 2;
+}
+
+/*styling*/
 
 .title-styling {
     font-size: 3rem;
