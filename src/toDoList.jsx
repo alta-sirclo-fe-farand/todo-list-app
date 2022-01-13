@@ -1,25 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { withRouter } from './utils/navigator';
 import './toDoList.css';
 
-class toDoList extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      title: "MyToDo",
-      task: [],
-      addedTask: "",
-      isReady: false,
-    };
-  }
+const ToDoList = () => {
+  const navigate = useNavigate();
+  const [task, setTask] = useState([]);
+  const [addedTask, setAddedTask] = useState("");
+  const [isReady, setIsReady] = useState(false);
 
-  componentDidMount() {
-    this.fetchData();
-  }
+  useEffect(() => {
+    fetchData();
+  }, [])
 
-  async fetchData() {
+  const fetchData = () => {
     const config = {
       headers: {
         Authorization: `Bearer 7c6d3833897c6fad479421ad81c095dd1c355b88`
@@ -29,40 +23,39 @@ class toDoList extends React.Component {
       .get("https://api.todoist.com/rest/v1/tasks", config)
       .then((res) => {
         const { data } = res;
-        this.setState({ task: data });
-        console.log( this.state.task );
+        setTask(data);
       })
       .catch((err) => {
         console.log(err);
       })
       .finally(() => {
-        this.setState({ isReady: true });
-      })
+        setIsReady(true);
+      });
   }
   
-  handleAdd() {
+  const handleAdd = () => {
     const config = {
       headers: {
         Authorization: `Bearer 7c6d3833897c6fad479421ad81c095dd1c355b88`
       },
     };
     axios
-      .post("https://api.todoist.com/rest/v1/tasks", { "content": this.state.addedTask }, config)
+      .post("https://api.todoist.com/rest/v1/tasks", { "content": addedTask }, config)
       .then(() => {
         // const { data } = res;
-        this.fetchData();
+        fetchData();
       })
       .catch((err) => {
         console.log(err);
       })
       .finally(() => {
-        this.setState({ isReady: true });
-        this.setState({ addedTask: "" });
+        setIsReady(true);
+        setAddedTask("");
       })
   }
 
 
-  handleSearch() {
+  const handleSearch = () => {
     const config = {
       headers: {
         Authorization: `Bearer 7c6d3833897c6fad479421ad81c095dd1c355b88`
@@ -72,49 +65,49 @@ class toDoList extends React.Component {
       .get("https://api.todoist.com/rest/v1/tasks", config)
       .then((res) => {
         const { data } = res;
-        this.setState({ task: data });
-        const searchValue = this.state.addedTask.toString();
-        const contents = this.state.task.map((e) =>
+        setTask(data);
+        const searchValue = addedTask.toString();
+        const contents = task.map((e) =>
           e.content
         );
         const filteredTask = contents.filter((e) =>
           e.includes(searchValue) === true
         );
-        const searchResult = this.state.task.filter((e) => 
+        const searchResult = task.filter((e) => 
           filteredTask.includes(e.content) === true 
         );
-        this.setState({ task: searchResult });
+        setTask(searchResult);
       })
       .catch((err) => {
         console.log(err);
       })
       .finally(() => {
-        this.setState({ isReady: true });
+        setIsReady(true);
       })
   }
 
-  handleComplete(item) {
+  const handleComplete = (item) => {
     const config = {
       headers: {
         Authorization: `Bearer 7c6d3833897c6fad479421ad81c095dd1c355b88`
       },
     };
     axios
-      .post(`https://api.todoist.com/rest/v1/tasks/${item.id}`, { "content": this.state.addedTask }, config)
+      .post(`https://api.todoist.com/rest/v1/tasks/${item.id}`, { "content": addedTask }, config)
       .then(() => {
         // const { data } = res;
-        this.fetchData();
+        fetchData();
       })
       .catch((err) => {
         console.log(err);
       })
       .finally(() => {
-        this.setState({ isReady: true });
-        this.setState({ addedTask: "" });
+        setIsReady(true);
+        setAddedTask("");
       })
   }
 
-  handleDelete(item) {
+  const handleDelete = (item) => {
     const config = {
       headers: {
         Authorization: `Bearer 7c6d3833897c6fad479421ad81c095dd1c355b88`
@@ -124,76 +117,74 @@ class toDoList extends React.Component {
       .delete(`https://api.todoist.com/rest/v1/tasks/${item.id}`, config)
       .then(() => {
         // const { data } = res;
-        this.fetchData();
+        fetchData();
       })
       .catch((err) => {
         console.log(err);
       })
       .finally(() => {
-        this.setState({ isReady: true });
+        setIsReady(true);
       })
   }
 
-  render () {
-    if(this.state.isReady) {
-      return (
-        <div className='page-grid-container'>
-          <div className='input-container'>
-              <input 
-                className='input-bar'
-                type="text"
-                placeholder="Your task here .."
-                value={this.state.addedTask}
-                onChange={(e) => this.setState({ addedTask: e.target.value })}
-              />
-              <button
-                className='add-button'
-                type="submit" 
-                onClick={() => this.handleAdd()}>Add
-              </button>
-              <button
-                className='search-button'
-                type="submit" 
-                onClick={() => this.handleSearch()}>Search
-              </button>
-          </div>
-          <div className='task-container'>
-            {this.state.task.map((item) => (
-              <div key={item.id}>
-                <div
-                  onClick={() => this.props.navigate(`/toDoList/${item.id}`)}>{item.content}
-                </div>
-                <div>
-                  <button
-                    onClick={() => this.handleComplete(item)}>Edit
-                  </button>
-                </div>
-                <div>
-                  <button
-                    onClick={() => this.handleDelete(item)}>Delete
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className='button-container'>
-              <button
-                className='reset-button'
-                onClick={() => this.fetchData()}>Reset Search
-              </button>
-              <button
-                className='contact-button'
-                onClick={() => this.props.navigate("/error")}>Contact Us
-              </button>
-          </div>
+  if (isReady) {
+    return (
+      <div className='page-grid-container'>
+        <div className='input-container'>
+          <input 
+            className='input-bar'
+            type="text"
+            placeholder="Your task here .."
+            value={addedTask}
+            onChange={(e) => setAddedTask(e.target.value)}
+          />
+          <button
+            className='add-button'
+            type="submit" 
+            onClick={() => handleAdd()}>Add
+          </button>
+          <button
+            className='search-button'
+            type="submit" 
+            onClick={() => handleSearch()}>Search
+          </button>
         </div>
-      )
-    } else {
-      return (
-        <p className='title-container'>loading ...</p>
-      )
-    }
+        <div className='task-container'>
+          {task.map((item) => (
+            <div key={item.id}>
+              <div
+                onClick={() => navigate(`/toDoList/${item.id}`)}>{item.content}
+              </div>
+              <div>
+                <button
+                  onClick={() => handleComplete(item)}>Edit
+                </button>
+              </div>
+              <div>
+                <button
+                  onClick={() => handleDelete(item)}>Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className='button-container'>
+          <button
+            className='reset-button'
+            onClick={() => fetchData()}>Reset Search
+          </button>
+          <button
+            className='contact-button'
+            onClick={() => navigate("/error")}>Contact Us
+          </button>
+        </div>
+      </div>
+    )
+  } else {
+    return (
+      <p className='title-container'>loading ...</p>
+    )
   }
 }
 
-export default withRouter(toDoList);
+export default ToDoList;

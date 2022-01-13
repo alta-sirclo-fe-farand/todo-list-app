@@ -1,12 +1,17 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './details_notFound.css'
 
-export default class notFound extends React.Component {
-  render () {
-    return (
-      <div className='title-container'>
-        <p>This page is not available.</p>
-      </div>
-    )
-  }
+const NotFound = () => {
+  const navigate = useNavigate();
+  return (
+    <div className='detail-container'>
+      <p>This page is not available.</p>
+      <p 
+        onClick={() => navigate("/toDoList")}>Back to Home
+      </p>
+    </div>
+  )
 }
+
+export default NotFound;

@@ -8,9 +8,6 @@ function App(props) {
     <div>
       <MyToDoHeader />
       <Outlet />
-      <Link 
-        className="title-container"
-        to="/toDoList">Back to Home</Link>
     </div>
   );
 }

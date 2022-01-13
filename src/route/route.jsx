@@ -5,18 +5,18 @@ import ToDoList from '../toDoList';
 import ToDoListDetails from '../toDoListDetails';
 import NotFound from '../notFound';
 
-export default class route extends Component {
-    render() {
-        return (
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<App />}>
-                        <Route path="toDoList" element={<ToDoList />} />
-                        <Route path="toDoList/:id" element={<ToDoListDetails />} />
-                        <Route path="*" element={<NotFound />} />
-                    </Route>
-                </Routes>
-            </BrowserRouter>
-        )
-    }
+const Navigation = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route path="toDoList" element={<ToDoList />} />
+          <Route path="toDoList/:id" element={<ToDoListDetails />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  )
 }
+
+export default Navigation;
