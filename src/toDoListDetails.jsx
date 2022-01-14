@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom'
-import './details_notFound.css'
+import './style.css'
 
 const ToDoListDetails = (item) => {
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ const ToDoListDetails = (item) => {
     )
   } else {
     return (
-      <p className='title-container'>loading ...</p>
+      <p className='detail-container'>loading ...</p>
     )
   }
 }

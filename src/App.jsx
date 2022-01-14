@@ -1,7 +1,6 @@
 import React from "react";
-import { Outlet, Link } from "react-router-dom";
-import MyToDoHeader from './comp/header'
-import './details_notFound.css'
+import { Outlet } from "react-router-dom";
+import MyToDoHeader from './comp/header';
 
 function App(props) {
   return (

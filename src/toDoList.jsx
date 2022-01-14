@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './toDoList.css';
+import './style.css';
+import UrlContext from './utils/variables';
 
 const ToDoList = () => {
   const navigate = useNavigate();
   const [task, setTask] = useState([]);
   const [addedTask, setAddedTask] = useState("");
   const [isReady, setIsReady] = useState(false);
+  const url = useContext(UrlContext);
 
   useEffect(() => {
     fetchData();
@@ -20,7 +22,7 @@ const ToDoList = () => {
       },
     };
     axios
-      .get("https://api.todoist.com/rest/v1/tasks", config)
+      .get(url, config)
       .then((res) => {
         const { data } = res;
         setTask(data);
@@ -40,7 +42,7 @@ const ToDoList = () => {
       },
     };
     axios
-      .post("https://api.todoist.com/rest/v1/tasks", { "content": addedTask }, config)
+      .post(url, { "content": addedTask }, config)
       .then(() => {
         // const { data } = res;
         fetchData();
@@ -62,7 +64,7 @@ const ToDoList = () => {
       },
     };
     axios
-      .get("https://api.todoist.com/rest/v1/tasks", config)
+      .get(url, config)
       .then((res) => {
         const { data } = res;
         setTask(data);
@@ -93,7 +95,7 @@ const ToDoList = () => {
       },
     };
     axios
-      .post(`https://api.todoist.com/rest/v1/tasks/${item.id}`, { "content": addedTask }, config)
+      .post(url+`/${item.id}`+"", { "content": addedTask }, config)
       .then(() => {
         // const { data } = res;
         fetchData();
@@ -114,7 +116,7 @@ const ToDoList = () => {
       },
     };
     axios
-      .delete(`https://api.todoist.com/rest/v1/tasks/${item.id}`, config)
+      .delete(url+`/${item.id}`+"", config)
       .then(() => {
         // const { data } = res;
         fetchData();
@@ -150,23 +152,27 @@ const ToDoList = () => {
           </button>
         </div>
         <div className='task-container'>
-          {task.map((item) => (
-            <div key={item.id}>
-              <div
-                onClick={() => navigate(`/toDoList/${item.id}`)}>{item.content}
-              </div>
-              <div>
-                <button
-                  onClick={() => handleComplete(item)}>Edit
-                </button>
-              </div>
-              <div>
-                <button
-                  onClick={() => handleDelete(item)}>Delete
-                </button>
-              </div>
-            </div>
-          ))}
+          <table>
+            <tbody>
+              {task.map((item) => (
+                <tr key={item.id}>
+                  <td
+                    className='task-alignment'
+                    onClick={() => navigate(`/toDoList/${item.id}`)}>{item.content}
+                  </td>
+                  <td
+                    className='action-alignment'>
+                    <button
+                      onClick={() => handleComplete(item)}>Edit
+                    </button> &nbsp;
+                    <button
+                      onClick={() => handleDelete(item)}>Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         <div className='button-container'>
           <button
@@ -182,7 +188,7 @@ const ToDoList = () => {
     )
   } else {
     return (
-      <p className='title-container'>loading ...</p>
+      <p className='detail-container'>loading ...</p>
     )
   }
 }
