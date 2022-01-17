@@ -6,8 +6,8 @@ import UrlContext from './utils/variables';
 
 const ToDoList = () => {
   const navigate = useNavigate();
-  const [task, setTask] = useState([]);
-  const [addedTask, setAddedTask] = useState("");
+  const [task, setTask] = useState<any[]>([]);
+  const [addedTask, setAddedTask] = useState<string>("");
   const [isReady, setIsReady] = useState(false);
   const url = useContext(UrlContext);
 
@@ -69,13 +69,13 @@ const ToDoList = () => {
         const { data } = res;
         setTask(data);
         const searchValue = addedTask.toString();
-        const contents = task.map((e) =>
+        const contents = task?.map((e) =>
           e.content
         );
         const filteredTask = contents.filter((e) =>
           e.includes(searchValue) === true
         );
-        const searchResult = task.filter((e) => 
+        const searchResult = task?.filter((e) => 
           filteredTask.includes(e.content) === true 
         );
         setTask(searchResult);
@@ -88,7 +88,7 @@ const ToDoList = () => {
       })
   }
 
-  const handleComplete = (item) => {
+  const handleComplete = (item: any) => {
     const config = {
       headers: {
         Authorization: `Bearer 7c6d3833897c6fad479421ad81c095dd1c355b88`
@@ -109,7 +109,7 @@ const ToDoList = () => {
       })
   }
 
-  const handleDelete = (item) => {
+  const handleDelete = (item: any) => {
     const config = {
       headers: {
         Authorization: `Bearer 7c6d3833897c6fad479421ad81c095dd1c355b88`
@@ -154,7 +154,7 @@ const ToDoList = () => {
         <div className='task-container'>
           <table>
             <tbody>
-              {task.map((item) => (
+              {task?.map((item: any) => (
                 <tr key={item.id}>
                   <td
                     className='task-alignment'

@@ -17,8 +17,8 @@ body {
 .title-container {
   display: grid;
   grid-template-rows: 1fr 1fr;
-  padding-top: 2.5vh;
-  padding-bottom: 2.5vh;
+  padding-top: 2.5vw;
+  padding-bottom: 2.5vw;
 }
 
 .title-alignment {
@@ -94,6 +94,32 @@ body {
     background-color: grey;
 }
 
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .title-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    padding: 2.5vw;
+  }
+  
+  .title-alignment {
+    grid-column: 2 / span 1;
+    text-align: center;
+  }
+  
+  .main-alignment {
+    grid-column: 3 / span 1;
+    text-align: right;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
-    /**/
+  /* here */
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  /* here */
 }

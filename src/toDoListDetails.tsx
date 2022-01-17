@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom'
 import './style.css'
+import UrlContext from './utils/variables';
 
-const ToDoListDetails = (item) => {
+const ToDoListDetails = () => {
+
   const navigate = useNavigate();
   const [isReady, setIsReady] = useState(false);
-  const [selectedTask, setSelectedTask] = useState([]);
+  const [selectedTask, setSelectedTask] = useState<{ content: string, id: number, completed: string }>();
+  const url = useContext(UrlContext);
+  const details = useParams();
 
   useEffect(() => {
     fetchData();
   }, [])
 
-  const { id } = useParams();
   const fetchData = () => {
     const config = {
       headers: {
@@ -20,7 +23,7 @@ const ToDoListDetails = (item) => {
       },
     };
     axios
-      (`https://api.todoist.com/rest/v1/tasks/${ id }`, config)
+      (url+`/${ details.id }`+"", config)
       .then((res) => {
         const { data } = res;
         console.log(res);
@@ -41,15 +44,15 @@ const ToDoListDetails = (item) => {
           <tbody>
             <tr>
               <td>Task</td>
-              <td>: { selectedTask.content }</td>
+              <td>: { selectedTask?.content }</td>
             </tr>
             <tr>
               <td>ID</td>
-              <td>: { selectedTask.id }</td>
+              <td>: { selectedTask?.id }</td>
             </tr>
             <tr>
               <td>Completed</td>
-              <td>: { selectedTask.completed.toString() }</td>
+              <td>: { selectedTask?.completed.toString() }</td>
           </tr>
           </tbody>
         </table>
